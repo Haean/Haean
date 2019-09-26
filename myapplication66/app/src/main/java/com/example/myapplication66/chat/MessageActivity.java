@@ -152,33 +152,36 @@ public class MessageActivity extends AppCompatActivity {
         for (String noun : A) {
             System.out.println(noun);
         }
+        if(func == 1){
+            Menu(A);
+        }else {
+            if (A.contains("해안")) {
+                A.remove("해안");
 
-        if (A.contains("해안")) {
-            A.remove("해안");
-
-            if (A.contains("선택") || A.contains("고르")) {
-                if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
+                if (A.contains("선택") || A.contains("고르")) {
+                    if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
+                        //메뉴추천
+                        Menu(A);
+                    }
+                    //선택
+                } else if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
                     //메뉴추천
                     Menu(A);
+                } else if (A.contains("날씨")) {
+                    //날씨
+                } else if (A.contains("위치")) {
+                    //위치
+                } else if (A.contains("문제") || A.contains("퀴즈")) {
+                    //퀴즈
+                } else if (A.contains("가위바위보")) {
+                    //가위바위보
+                } else if (A.contains("교통")) {
+                    //교통정보
+                } else if (A.contains("운세")) {
+                    //운세
+                } else {
+                    //사용법,메뉴얼 보여주기
                 }
-                //선택
-            } else if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
-                //메뉴추천
-                Menu(A);
-            } else if (A.contains("날씨")) {
-                //날씨
-            } else if (A.contains("위치")) {
-                //위치
-            } else if (A.contains("문제") || A.contains("퀴즈")) {
-                //퀴즈
-            } else if (A.contains("가위바위보")) {
-                //가위바위보
-            } else if (A.contains("교통")) {
-                //교통정보
-            } else if (A.contains("운세")) {
-                //운세
-            } else {
-                //사용법,메뉴얼 보여주기
             }
         }
 
@@ -195,7 +198,7 @@ public class MessageActivity extends AppCompatActivity {
 
         Random rand = new Random();
         int a = 0;
-
+        func = 0;
         if (A.contains("한식")) {
             a = Han.size();
             a = rand.nextInt(a);
@@ -226,6 +229,8 @@ public class MessageActivity extends AppCompatActivity {
             output = Ki.get(a);
         } else {
             output = "한식/분식/중식/일식/아시아/패스트푸드/기타 중 어떤 음식을 먹고 싶으신가요?";
+            func=1;
+
         }
 
         A.clear();
@@ -300,7 +305,6 @@ public class MessageActivity extends AppCompatActivity {
 
                 // 상대방이 보낸 메세지
             } else if (comments.get(position).uid.equals("oXK4YFZxceV5yKduSmgfcAg5ehg1")) {
-                System.out.println("찾음");
 
                 String c = "챗봇";
                 String d = "https://firebasestorage.googleapis.com/v0/b/my-application66.appspot.com/o/userImages%2FoXK4YFZxceV5yKduSmgfcAg5ehg1?alt=media&token=bc6820e5-d35e-441a-8658-b9cf9dc34604";

@@ -104,6 +104,7 @@ public class MessageActivity extends AppCompatActivity {
                     comment.message = output;
                     FirebaseDatabase.getInstance().getReference().child("chatrooms").child(chatRoomUid).child("comments")
                             .push().setValue(comment);
+                    output = null;
 
                 }
             }

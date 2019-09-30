@@ -1,7 +1,6 @@
 package com.example.myapplication66.chat;
 
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication66.R;
 import com.example.myapplication66.model.ChatModel;
-import com.example.myapplication66.model.TestModel;
 import com.example.myapplication66.model.UserModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,16 +31,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.TimeZone;
 
-import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
-import kr.co.shineware.nlp.komoran.core.Komoran;
-import kr.co.shineware.nlp.komoran.model.KomoranResult;
-import kr.co.shineware.nlp.komoran.model.Token;
+import com.example.myapplication66.chat.*;
+
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -54,9 +48,6 @@ public class MessageActivity extends AppCompatActivity {
     private String chatRoomUid;
 
     private RecyclerView recyclerView;
-
-    private String output;
-    int func = 0;   //0:없음 1:메뉴
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 
@@ -99,12 +90,13 @@ public class MessageActivity extends AppCompatActivity {
                             editText.setText(null);  // 콜백을 걸어서 전송버튼 눌렀을 때 메세지보내는 창 초기화
                         }
                     });
-                    Check(comment.message);
-                    comment.uid = "oXK4YFZxceV5yKduSmgfcAg5ehg1";
-                    comment.message = output;
-                    FirebaseDatabase.getInstance().getReference().child("chatrooms").child(chatRoomUid).child("comments")
-                            .push().setValue(comment);
-                    output = null;
+                    ChatBot.Check(comment.message);
+                    comment.uid = "chatbot";
+                    comment.message = ChatBot.output;
+                    if(ChatBot.output!=null) {
+                        FirebaseDatabase.getInstance().getReference().child("chatrooms").child(chatRoomUid).child("comments")
+                                .push().setValue(comment);
+                    }
 
                 }
             }
@@ -134,107 +126,6 @@ public class MessageActivity extends AppCompatActivity {
 
                     }
                 });
-    }
-
-    //챗봇기능 구현
-    public void Check(String a) {
-        ArrayList<String> A = new ArrayList();
-        Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
-
-        KomoranResult analyzeResultList = komoran.analyze(a);
-
-        List<Token> tokenList = analyzeResultList.getTokenList();
-        for (Token token : tokenList) {
-            if (token.getPos().equals("NNG") || token.getPos().equals("NNP") || token.getPos().equals("VV")) {
-                A.add(token.getMorph());
-            }
-        }
-
-        for (String noun : A) {
-            System.out.println(noun);
-        }
-        if(func == 1){
-            Menu(A);
-        }else {
-            if (A.contains("해안")) {
-                A.remove("해안");
-
-                if (A.contains("선택") || A.contains("고르")) {
-                    if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
-                        //메뉴추천
-                        Menu(A);
-                    }
-                    //선택
-                } else if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
-                    //메뉴추천
-                    Menu(A);
-                } else if (A.contains("날씨")) {
-                    //날씨
-                } else if (A.contains("위치")) {
-                    //위치
-                } else if (A.contains("문제") || A.contains("퀴즈")) {
-                    //퀴즈
-                } else if (A.contains("가위바위보")) {
-                    //가위바위보
-                } else if (A.contains("교통")) {
-                    //교통정보
-                } else if (A.contains("운세")) {
-                    //운세
-                } else {
-                    //사용법,메뉴얼 보여주기
-                }
-            }
-        }
-
-    }
-
-    public void Menu(ArrayList A) {
-        ArrayList<String> Han = new ArrayList<String>(Arrays.asList("김치찌개", "부대찌개", "된장찌개", "비빔밥", "제육덮밥", "뼈해장국", "수육국밥"));
-        ArrayList<String> Bun = new ArrayList<String>(Arrays.asList("떡볶이", "라볶이", "라면", "만두", "김밥", "순대", "튀김", "우동", "돈까스", "쫄면"));
-        ArrayList<String> Jung = new ArrayList<String>(Arrays.asList("짜장면", "짬뽕", "간짜장", "우동", "울면", "탕수육", "볶음밥", "잡채밥"));
-        ArrayList<String> Il = new ArrayList<String>(Arrays.asList("우동", "초밥", "돈까스", "덮밥", "회", "라멘", "소바", "오니기리"));
-        ArrayList<String> Asia = new ArrayList<String>(Arrays.asList("훠궈", "쌀국수", "마라탕", "팟타이", "분짜", "나시고렝"));
-        ArrayList<String> Fast = new ArrayList<String>(Arrays.asList("피자", "치킨", "햄버거"));
-        ArrayList<String> Ki = new ArrayList<String>(Arrays.asList("냉면", "고기", "곱창", "닭발", "족발", "보쌈"));
-
-        Random rand = new Random();
-        int a = 0;
-        func = 0;
-        if (A.contains("한식")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Han.get(a);
-        } else if (A.contains("분식")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Bun.get(a);
-        } else if (A.contains("중식")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Jung.get(a);
-        } else if (A.contains("일식")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Il.get(a);
-        } else if (A.contains("아시아")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Asia.get(a);
-        } else if (A.contains("패스트푸드")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Fast.get(a);
-        } else if (A.contains("기타")) {
-            a = Han.size();
-            a = rand.nextInt(a);
-            output = Ki.get(a);
-        } else {
-            output = "한식/분식/중식/일식/아시아/패스트푸드/기타 중 어떤 음식을 먹고 싶으신가요?";
-            func=1;
-
-        }
-
-        A.clear();
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -294,6 +185,7 @@ public class MessageActivity extends AppCompatActivity {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             MessageViewHoler messageViewHoler = ((MessageViewHoler) holder);
 
+            System.out.println(comments.get(position).uid);
 
             //내가 보낸 메세지
             if (comments.get(position).uid.equals(uid)) {
@@ -305,10 +197,10 @@ public class MessageActivity extends AppCompatActivity {
 
 
                 // 상대방이 보낸 메세지
-            } else if (comments.get(position).uid.equals("oXK4YFZxceV5yKduSmgfcAg5ehg1")) {
+            } else if (comments.get(position).uid.equals("chatbot")) {
 
-                String c = "챗봇";
-                String d = "https://firebasestorage.googleapis.com/v0/b/my-application66.appspot.com/o/userImages%2FoXK4YFZxceV5yKduSmgfcAg5ehg1?alt=media&token=bc6820e5-d35e-441a-8658-b9cf9dc34604";
+                String c = "해안";
+                String d = "https://firebasestorage.googleapis.com/v0/b/my-application66.appspot.com/o/userImages%2F3.png?alt=media&token=e7f57cfb-89fb-48a7-9229-bbe4cb04208b";
 
                 Glide.with(holder.itemView.getContext()).load(d).apply(new RequestOptions().circleCrop())
                         .into(messageViewHoler.imageView_profile);

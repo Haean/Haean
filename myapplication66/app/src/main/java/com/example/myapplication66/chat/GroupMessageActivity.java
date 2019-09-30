@@ -99,6 +99,13 @@ public class GroupMessageActivity extends AppCompatActivity {
                         editText.setText("");
                     }
                 });
+                ChatBot.Check(comment.message);
+                comment.uid = "chatbot";
+                comment.message = ChatBot.output;
+                if(ChatBot.output!=null) {
+                    FirebaseDatabase.getInstance().getReference().child("chatrooms").child(destinationRoom).child("comments")
+                            .push().setValue(comment);
+                }
             }
         });
 

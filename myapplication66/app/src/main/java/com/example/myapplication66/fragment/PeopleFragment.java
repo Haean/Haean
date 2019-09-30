@@ -42,6 +42,8 @@ public class PeopleFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setAdapter(new PeopleFragmentRecyclerViewAdapter());
 
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         FloatingActionButton floatingActionButton = (FloatingActionButton)view.findViewById(R.id.peoplefragment_floatinButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -27,17 +27,25 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        Button button = (Button)view.findViewById(R.id.accountFragment_button_comment);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button comment = (Button)view.findViewById(R.id.accountFragment_button_comment); // 상태메세지 변경 버튼
+        comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog(view.getContext());
+                showDialog(view.getContext()); // 상태메세지 변경 메소드
+            }
+        });
+
+        Button reName = (Button)view.findViewById(R.id.accountFragment_button_reName); // 이름 변경 버튼
+        reName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               changeName(view.getContext()); // 이름 변경 메소드
             }
         });
 
         return view;
     }
-    void showDialog(Context context){
+    void showDialog(Context context){  // 상태메세지 변경 메소드
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -51,6 +59,30 @@ public class AccountFragment extends Fragment {
                 Map<String,Object> stringObjectMap = new HashMap<>();
                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 stringObjectMap.put("comment",editText.getText().toString());
+                FirebaseDatabase.getInstance().getReference().child("users").child(uid).updateChildren(stringObjectMap);
+            }
+        }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+    void changeName(Context context){  // 이름 변경 메소드
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+        View view = layoutInflater.inflate(R.layout.item_rename,null);
+        final EditText editText = (EditText) view.findViewById(R.id.renameDialog_edittext);
+        builder.setView(view).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                Map<String,Object> stringObjectMap = new HashMap<>();
+                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                stringObjectMap.put("userName",editText.getText().toString());
                 FirebaseDatabase.getInstance().getReference().child("users").child(uid).updateChildren(stringObjectMap);
             }
         }).setNegativeButton("취소", new DialogInterface.OnClickListener() {

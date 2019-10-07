@@ -41,7 +41,10 @@ public class ChatBot {
                         //메뉴추천
                         Menu(A);
                     }
-                    //선택
+                    else {
+                        choice(A);
+                    }
+
                 } else if (A.contains("메뉴") || A.contains("추천") || A.contains("아침") || A.contains("점심") || A.contains("저녁") || A.contains("밥") || A.contains("아침밥") || A.contains("점심밥") || A.contains("저녁밥")) {
                     //메뉴추천
                     Menu(A);
@@ -64,7 +67,16 @@ public class ChatBot {
         }
 
     }
-
+    //a
+    static void choice(ArrayList A){
+        A.remove("고르");
+        A.remove("선택");
+        Random rand = new Random();
+        int a = 0;
+        a = A.size();
+        a = rand.nextInt(a);
+        output = (String) A.get(a);
+    }
     //메뉴추천 기능
     static void Menu(ArrayList A) {
         ArrayList<String> Han = new ArrayList<String>(Arrays.asList("김치찌개", "부대찌개", "된장찌개", "비빔밥", "제육덮밥", "뼈해장국", "수육국밥", "백반", "불고기", "설렁탕"));
@@ -113,4 +125,6 @@ public class ChatBot {
 
         A.clear();
     }
+
+
 }

@@ -44,6 +44,7 @@ public class PeopleFragment extends Fragment {
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+
         FloatingActionButton floatingActionButton = (FloatingActionButton)view.findViewById(R.id.peoplefragment_floatinButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,12 +60,18 @@ public class PeopleFragment extends Fragment {
         List<UserModel> userModels;
         public PeopleFragmentRecyclerViewAdapter(){
             userModels = new ArrayList<>();
+            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //친구목록 불러오기
                     userModels.clear();
                     for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                        userModels.add(snapshot.getValue(UserModel.class));
+
+                        UserModel userModel = snapshot.getValue(UserModel.class);
+                        if (userModel.uid.equals(myUid)|| userModel.uid.equals("chatbot")){
+                            continue;
+                        }
+                        userModels.add(userModel);
                     }
                     notifyDataSetChanged();
                 }

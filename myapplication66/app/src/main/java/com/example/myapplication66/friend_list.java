@@ -2,11 +2,15 @@ package com.example.myapplication66;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 
 import com.example.myapplication66.fragment.ChatFragment;
 import com.example.myapplication66.fragment.PeopleFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class friend_list extends AppCompatActivity {
 
@@ -14,6 +18,8 @@ public class friend_list extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
+        Button signOut;
+        signOut = findViewById(R.id.signOut);
 
         TabHost tabHost1 = (TabHost)findViewById(R.id.tabHost1);
         tabHost1.setup();
@@ -38,6 +44,15 @@ public class friend_list extends AppCompatActivity {
         ts3.setIndicator("",getResources().getDrawable(R.drawable.ic_reorder_black_24dp));
         //ts3.setIndicator("설정");
         tabHost1.addTab(ts3);
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(friend_list.this , LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
         getFragmentManager().beginTransaction().replace(R.id.friend_list_frame,new PeopleFragment()).commit();

@@ -212,6 +212,7 @@ public class MessageActivity extends AppCompatActivity {
                 messageViewHoler.textView_message.setTextSize(20);
                 messageViewHoler.linearLayout_main.setGravity(Gravity.LEFT);  // 메세지 왼쪽 정렬
 
+
             } else {
 
 

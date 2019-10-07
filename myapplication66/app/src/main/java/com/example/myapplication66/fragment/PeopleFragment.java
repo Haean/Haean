@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,6 +108,10 @@ public class PeopleFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
+            if(userModels.get(position).comment != null){
+                ((CustomViewHolder)holder).textView_comment.setText(userModels.get(position).comment);
+            }
         }
 
         @Override
@@ -118,11 +124,13 @@ public class PeopleFragment extends Fragment {
 
             public ImageView imageView;
             public TextView textView;
+            public TextView textView_comment;
 
             public CustomViewHolder(View view) {
                 super(view);
                 imageView = (ImageView)view.findViewById(R.id.frienditem_imageview1);
                 textView = (TextView)view.findViewById(R.id.frienditem_textview);
+                textView_comment = (TextView)view.findViewById(R.id.frienditem_textview_comment);
             }
         }
     }

@@ -66,7 +66,6 @@ public class PeopleFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //친구목록 불러오기
                     userModels.clear();
                     for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-
                         UserModel userModel = snapshot.getValue(UserModel.class);
                         if (userModel.uid.equals(myUid)|| userModel.uid.equals("chatbot")){
                             continue;

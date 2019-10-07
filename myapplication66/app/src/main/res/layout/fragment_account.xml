@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+
+    <ImageView
+        android:id="@+id/SignupActivity_imageview_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/add_photo" />
+
+    <Button
+        android:id="@+id/accountFragment_button_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="현재 상태 메세지"
+        android:layout_marginTop="30dp"/>
+
+
+    <Button
+        android:id="@+id/accountFragment_button_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원 탈퇴"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/accountFragment_button_modifyNAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름 변경"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/accountFragment_button_modifyPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 변경"
+        android:layout_marginTop="30dp"/>
+
+
+
+</LinearLayout>

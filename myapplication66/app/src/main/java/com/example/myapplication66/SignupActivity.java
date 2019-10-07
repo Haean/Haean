@@ -83,20 +83,20 @@ public class SignupActivity extends AppCompatActivity {
 
                                                         String imageUrl=uri.toString();
 
-                                                        UserModel userModel=new UserModel();
+                                                                UserModel userModel=new UserModel();
 
-                                                        userModel.userName=name.getText().toString();
+                                                                userModel.userName=name.getText().toString();
 
-                                                        userModel.profileImageUrl=imageUrl;
+                                                                userModel.profileImageUrl=imageUrl;
 
-                                                        userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                                userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                                                        FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel);
+                                                                FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel);
 
-                                                        FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                SignupActivity.this.finish();
+                                                                FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        SignupActivity.this.finish();
                                                             }
                                                         });
                                                     }

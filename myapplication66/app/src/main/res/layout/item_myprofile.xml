@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="71dp">
+    android:layout_height="71dp"
+    tools:ignore="MissingDefaultResource">
 
     <LinearLayout
 
@@ -12,27 +14,26 @@
         <ImageView
 
             android:layout_margin="10dp"
-            android:id="@+id/frienditem_imageview1"
+            android:id="@+id/myprofileitem_imageview1"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
 
         <TextView
-            android:id="@+id/frienditem_textview"
+            android:id="@+id/myprofileitem_textview"
             android:text="아이디"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
         <LinearLayout
-            android:layout_width="301dp"
-            android:layout_height="match_parent"
-            android:gravity="center|right">
+            android:gravity="center|right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/frienditem_textview_comment"
+                android:id="@+id/myprofileitem_textview_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

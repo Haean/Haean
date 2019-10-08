@@ -114,53 +114,6 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-
-        /*
-
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(email.getText().toString() == null || name.getText().toString() == null || password.getText().toString() == null || imageUri == null){
-                    return;
-                }
-
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
-                        .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                final String uid = task.getResult().getUser().getUid();
-                                FirebaseStorage.getInstance().getReference().child("userImages").child(uid).putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-
-                                        String imageUrl = task.getResult().getUploadSessionUri().toString();
-
-                                        UserModel userModel = new UserModel();
-                                        userModel.userName = name.getText().toString();
-                                        userModel.userPassword = password.getText().toString();
-                                        userModel.profileImageUrl = imageUrl;
-                                        userModel.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                                        Task<Void> users = FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(userModel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                SignupActivity.this.finish();
-                                            }
-                                        });
-
-                                    }
-                                });
-
-                            }
-                        });
-            }
-        });
-    }
-
-         */
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 

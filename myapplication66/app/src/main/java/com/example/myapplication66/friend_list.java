@@ -2,6 +2,8 @@ package com.example.myapplication66;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.example.myapplication66.fragment.AccountFragment;
 import com.example.myapplication66.fragment.ChatFragment;
 import com.example.myapplication66.fragment.PeopleFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class friend_list extends AppCompatActivity {
 
@@ -21,6 +24,8 @@ public class friend_list extends AppCompatActivity {
         setContentView(R.layout.activity_friend_list);
         Button signOut;
         signOut = findViewById(R.id.signOut);
+
+
 
         TabHost tabHost1 = (TabHost)findViewById(R.id.tabHost1);
         tabHost1.setup();
@@ -56,8 +61,15 @@ public class friend_list extends AppCompatActivity {
         });
 
 
+
+
         getFragmentManager().beginTransaction().replace(R.id.friend_list_frame,new PeopleFragment()).commit();
-        getFragmentManager().beginTransaction().replace(R.id.chat_list_frame,new ChatFragment()).commit();
         getFragmentManager().beginTransaction().replace(R.id.setUp_frame,new AccountFragment()).commit();
     }
+    @Override
+    protected void onResume() {
+        getFragmentManager().beginTransaction().replace(R.id.chat_list_frame,new ChatFragment()).commit();
+        super.onResume();
+    }
 }
+

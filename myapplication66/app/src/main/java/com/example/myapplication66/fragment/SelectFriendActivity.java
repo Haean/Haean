@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication66.R;
+import com.example.myapplication66.chat.GroupMessageActivity;
 import com.example.myapplication66.chat.MessageActivity;
 import com.example.myapplication66.model.ChatModel;
 import com.example.myapplication66.model.UserModel;
@@ -61,12 +62,18 @@ public class SelectFriendActivity extends AppCompatActivity {
         List<UserModel> userModels;
         public SelectFriendRecyclerViewAdapter(){
             userModels = new ArrayList<>();
+            userModels = new ArrayList<>();
+            final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //친구목록 불러오기
                     userModels.clear();
                     for(DataSnapshot snapshot :dataSnapshot.getChildren()){
-                        userModels.add(snapshot.getValue(UserModel.class));
+                        UserModel userModel = snapshot.getValue(UserModel.class);
+                        if (userModel.uid.equals(myUid)|| userModel.uid.equals("chatbot")){
+                            continue;
+                        }
+                        userModels.add(userModel);
                     }
                     notifyDataSetChanged();
                 }

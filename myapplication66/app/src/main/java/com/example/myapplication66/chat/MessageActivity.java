@@ -1,6 +1,5 @@
 package com.example.myapplication66.chat;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -102,7 +101,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         checkChatRoom();
-        //checkTest();
+
     }
 
     void checkChatRoom() {

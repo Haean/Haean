@@ -1,5 +1,6 @@
 package com.example.myapplication66.chat;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,8 @@ import kr.co.shineware.nlp.komoran.model.Token;
 
 public class ChatBot {
     static String output;
-    static int func = 0;   //0:없음 1:메뉴 2:선택
+    static int func = 0;   //0:없음 1:메뉴 2:선택 3:퀴즈
+    static int a = 0;
 
     //챗봇기능 구현
     static public void Check(String a) {
@@ -25,13 +27,15 @@ public class ChatBot {
 
         List<Token> tokenList = analyzeResultList.getTokenList();
         for (Token token : tokenList) {
-            if (token.getPos().equals("NNG") || token.getPos().equals("NNP") || token.getPos().equals("VV")) {
+            if (token.getPos().equals("NNG") || token.getPos().equals("NNP") || token.getPos().equals("VV") ||token.getPos().equals("SL")) {
                 A.add(token.getMorph());
             }
         }
 
         if(func == 1){
             Menu(A);
+        }else if(func ==3){
+            QuizResult(A);
         }else {
             if (A.contains("해안")) {
                 A.remove("해안");
@@ -54,14 +58,15 @@ public class ChatBot {
                     //위치
                 } else if (A.contains("문제") || A.contains("퀴즈")) {
                     //퀴즈
-                } else if (A.contains("가위바위보")) {
-                    //가위바위보
+                    Quiz(A);
                 } else if (A.contains("교통")) {
                     //교통정보
                 } else if (A.contains("운세")) {
                     //운세
+                    lucky(A);
                 } else {
                     //사용법,메뉴얼 보여주기
+                    menual();
                 }
             }
         }
@@ -76,6 +81,45 @@ public class ChatBot {
         a = A.size();
         a = rand.nextInt(a);
         output = (String) A.get(a);
+    }
+
+    //퀴즈 기능
+    static void Quiz(ArrayList A) {
+        ArrayList<String> Q1 = new ArrayList<String>(Arrays.asList("대한민국의 수도는 서울이다.", "미국의 수도는 LA다.","지섭이는 바보다.","수민이는 바보다."));
+        Random rand = new Random();
+        func = 3;
+        a = Q1.size();
+        a = rand.nextInt(a);
+        output = "문제: "+Q1.get(a);
+    }
+    static void QuizResult(ArrayList A){
+        if (A.contains("O")||A.contains("o")){
+
+            if(a%2==0){
+                output = "정답입니다!";
+            }else{
+                output = "틀렸습니다!";
+            }
+        }else{
+            if(a%2==0){
+                output = "틀렸습니다!";
+            }else{
+                output = "정답입니다!";
+            }
+        }
+        func =0;
+    }
+
+    //운세 기능
+    static void lucky(ArrayList A) {
+        ArrayList<String> luck = new ArrayList<String>(Arrays.asList("운세 좋음", "운세 그냥 그럼","운세 나쁨", "이지섭 조심", "최수민 조심","최유철 조심","임도연 조심"));
+        Random rand = new Random();
+        int a = 0;
+        func = 0;
+        a = luck.size();
+        a = rand.nextInt(a);
+        output = "오늘 운세는" + luck.get(a);
+
     }
     //메뉴추천 기능
     static void Menu(ArrayList A) {
@@ -124,6 +168,11 @@ public class ChatBot {
         }
 
         A.clear();
+    }
+
+    static void menual(){
+        output = "'해안아' 키워드를 입력하신 후 원하시는 서비스를 입력해주세요. \n"+ "메뉴추천 \n"+"날씨 \n"+"위치 \n"
+                +"퀴즈 \n"+"교통정보 \n"+"운세 \n"+"예시)해안 메뉴추천 \n";
     }
 
 

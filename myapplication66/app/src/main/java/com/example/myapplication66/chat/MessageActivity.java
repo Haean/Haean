@@ -89,7 +89,7 @@ public class MessageActivity extends AppCompatActivity {
                             editText.setText(null);  // 콜백을 걸어서 전송버튼 눌렀을 때 메세지보내는 창 초기화
                         }
                     });
-                    ChatBot.Check(comment.message);
+                    ChatBot.Check(comment.message,MessageActivity.this);
                     comment.uid = "chatbot";
                     comment.message = ChatBot.output;
                     if(ChatBot.output!=null) {

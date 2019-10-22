@@ -37,15 +37,15 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button)findViewById(R.id.login);
         firebaseAuth.signOut();
 
-        login.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {  // 로그인
             @Override
             public void onClick(View view) {
                 loginEvent();
             }
         });
 
-        Button=(TextView)findViewById(R.id.button2);
-        Button.setOnClickListener(new View.OnClickListener(){
+        Button=(TextView)findViewById(R.id.button2);  // 회원가입
+        Button.setOnClickListener(new View.OnClickListener(){  // intent를 이용해서 버튼을 눌렀을 경우 회원가입 창으로 이동
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.button2) {
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getCurrentUser(); // FirebaseAuth에서 정보를 확인해주는 것
                 if(user != null){
                     //로그인
                     Intent intent  = new Intent(LoginActivity.this,friend_list.class);
@@ -74,10 +74,8 @@ public class LoginActivity extends AppCompatActivity {
         };
     }
 
-
-
-
-    void loginEvent(){ //로그인 확인
+    //로그인 확인
+    void loginEvent(){
         firebaseAuth.signInWithEmailAndPassword(id.getText().toString(),password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -92,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart() { //로그인 할 때 자동으로 생성
         super.onStart();
         firebaseAuth.addAuthStateListener(authStateListener);
     }

@@ -67,7 +67,7 @@ public class friend_list extends AppCompatActivity {
         getFragmentManager().beginTransaction().replace(R.id.setUp_frame,new AccountFragment()).commit();
     }
     @Override
-    protected void onResume() {
+    protected void onResume() { //
         getFragmentManager().beginTransaction().replace(R.id.chat_list_frame,new ChatFragment()).commit();
         super.onResume();
     }

@@ -62,7 +62,6 @@ public class SelectFriendActivity extends AppCompatActivity {
         List<UserModel> userModels;
         public SelectFriendRecyclerViewAdapter(){
             userModels = new ArrayList<>();
-            userModels = new ArrayList<>();
             final String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
                 @Override

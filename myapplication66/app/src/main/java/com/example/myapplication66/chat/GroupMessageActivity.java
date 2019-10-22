@@ -99,7 +99,7 @@ public class GroupMessageActivity extends AppCompatActivity {
                         editText.setText("");
                     }
                 });
-                ChatBot.Check(comment.message);
+                ChatBot.Check(comment.message,GroupMessageActivity.this);
                 comment.uid = "chatbot";
                 comment.message = ChatBot.output;
                 if(ChatBot.output!=null) {

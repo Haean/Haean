@@ -74,7 +74,7 @@ public class ChatFragment extends Fragment {
             FirebaseDatabase.getInstance().getReference().child("chatrooms").orderByChild("users/"+uid).equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    chatModels.clear();;
+                    chatModels.clear();
                     for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                         chatModels.add(snapshot.getValue(ChatModel.class));
                         keys.add(snapshot.getKey());

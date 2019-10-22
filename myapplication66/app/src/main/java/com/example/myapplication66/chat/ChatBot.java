@@ -1,5 +1,12 @@
 package com.example.myapplication66.chat;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+
+import com.example.myapplication66.GpsInfo;
+
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +23,12 @@ public class ChatBot {
     static int func = 0;   //0:없음 1:메뉴 2:선택 3:퀴즈
     static int a = 0;
 
+    static GpsInfo GPS;// GPSTracker class
+    static Geocoder geocoder;
+    static String address="";
+
     //챗봇기능 구현
-    static public void Check(String a) {
+    static public void Check(String a, Context mContext) {
         ArrayList<String> A = new ArrayList();
         Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
 
@@ -27,7 +38,7 @@ public class ChatBot {
 
         List<Token> tokenList = analyzeResultList.getTokenList();
         for (Token token : tokenList) {
-            if (token.getPos().equals("NNG") || token.getPos().equals("NNP") || token.getPos().equals("VV") ||token.getPos().equals("SL")) {
+            if (token.getPos().equals("NNG") || token.getPos().equals("NNP") || token.getPos().equals("VV") ||token.getPos().equals("SL")) { // 명사, 동사, 영어
                 A.add(token.getMorph());
             }
         }
@@ -56,6 +67,7 @@ public class ChatBot {
                     //날씨
                 } else if (A.contains("위치")) {
                     //위치
+                    gps(A,mContext);
                 } else if (A.contains("문제") || A.contains("퀴즈")) {
                     //퀴즈
                     Quiz(A);
@@ -85,7 +97,7 @@ public class ChatBot {
 
     //퀴즈 기능
     static void Quiz(ArrayList A) {
-        ArrayList<String> Q1 = new ArrayList<String>(Arrays.asList("대한민국의 수도는 서울이다.", "미국의 수도는 LA다.","지섭이는 바보다.","수민이는 바보다."));
+        ArrayList<String> Q1 = new ArrayList<String>(Arrays.asList("대한민국의 수도는 서울이다.", "미국의 수도는 LA다.","지섭이는 바보다.","수민이는 바보다.")); // O X O X
         Random rand = new Random();
         func = 3;
         a = Q1.size();
@@ -118,7 +130,7 @@ public class ChatBot {
         func = 0;
         a = luck.size();
         a = rand.nextInt(a);
-        output = "오늘 운세는" + luck.get(a);
+        output = "오늘 운세는 " + luck.get(a);
 
     }
     //메뉴추천 기능
@@ -168,6 +180,41 @@ public class ChatBot {
         }
 
         A.clear();
+    }
+
+    static void gps(ArrayList A,Context mContext) {
+        //Log.d("ChatBot", "gps++++++++++++++++++++++++++++++++++");
+
+        GPS = new GpsInfo(mContext);
+        geocoder = new Geocoder(mContext);
+
+        if (GPS.isGetLocation()) {
+            double latitude = GPS.getLatitude(); //GPS를 통해 위도 가져옴
+            double longitude = GPS.getLongitude(); //경도
+
+            List<Address> list = null; //주소로 변환하기 위한 리스트
+
+            try {
+                list = geocoder.getFromLocation(latitude, longitude, 10);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String[] splitStr = list.get(0).toString().split(","); //콤마를 기준으로 Split
+            address = splitStr[0].substring(splitStr[0].indexOf("\"") + 1, splitStr[0].length() - 2);//주소
+
+            //Log.d("Google_Maps 위도" + latitude, "Google_Maps 위도");
+            //Log.d("Google_Maps 경도" + longitude, "Google_Maps 경도");
+
+
+            output="현재위치는  "+address+" 입니다.";
+
+        }else{
+            // GPS 를 사용할수 없으므로
+            GPS.showSettingsAlert();
+        }
+        //Log.d("ChatBot", "gps-------------------------------");
     }
 
     static void menual(){

@@ -25,7 +25,7 @@ import com.google.firebase.storage.UploadTask;
 
 import javax.xml.transform.Result;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity { // 회원가입액티비티
 
     private static final int PICK_FROM_ALBUM = 10;
     private EditText email;
@@ -42,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         profile = (ImageView)findViewById(R.id.SignupActivity_imageview_profile);
-        profile.setOnClickListener(new View.OnClickListener() {
+        profile.setOnClickListener(new View.OnClickListener() { // 앨범에 접근하는 것 intent를 이용하여 창 이동
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -115,7 +115,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) { // 사진을 교체하고 파이어베이스에 저장하기 위해 경로 필요함
 
         if (requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK) {
             profile.setImageURI(data.getData()); // 가운데 뷰를 바꿈

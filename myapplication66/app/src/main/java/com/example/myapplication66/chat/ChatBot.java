@@ -3,11 +3,16 @@ package com.example.myapplication66.chat;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.StrictMode;
 
 import com.example.myapplication66.GpsInfo;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +25,10 @@ import kr.co.shineware.nlp.komoran.model.Token;
 
 public class ChatBot {
     static String output;
-    static int func = 0;   //0:없음 1:메뉴 2:선택 3:퀴즈
+    static int func = 0;   //0:없음 1:메뉴 2:퀴즈
     static int a = 0;
+
+    static node[] A = new node[20];
 
     static GpsInfo GPS;// GPSTracker class
     static Geocoder geocoder;
@@ -45,8 +52,10 @@ public class ChatBot {
 
         if(func == 1){
             Menu(A);
-        }else if(func ==3){
+        }else if(func == 2){
             QuizResult(A);
+        }else if(func == 3){
+            Bus2(mContext,a);
         }else {
             if (A.contains("해안")) {
                 A.remove("해안");
@@ -71,8 +80,9 @@ public class ChatBot {
                 } else if (A.contains("문제") || A.contains("퀴즈")) {
                     //퀴즈
                     Quiz(A);
-                } else if (A.contains("교통")) {
+                } else if (A.contains("버스")) {
                     //교통정보
+                    Bus(mContext);
                 } else if (A.contains("운세")) {
                     //운세
                     lucky(A);
@@ -99,7 +109,7 @@ public class ChatBot {
     static void Quiz(ArrayList A) {
         ArrayList<String> Q1 = new ArrayList<String>(Arrays.asList("대한민국의 수도는 서울이다.", "미국의 수도는 LA다.","지섭이는 바보다.","수민이는 바보다.")); // O X O X
         Random rand = new Random();
-        func = 3;
+        func = 2;
         a = Q1.size();
         a = rand.nextInt(a);
         output = "문제: "+Q1.get(a);
@@ -119,7 +129,7 @@ public class ChatBot {
                 output = "정답입니다!";
             }
         }
-        func =0;
+        func = 0;
     }
 
     //운세 기능
@@ -182,6 +192,7 @@ public class ChatBot {
         A.clear();
     }
 
+    //위치 기능
     static void gps(ArrayList A,Context mContext) {
         //Log.d("ChatBot", "gps++++++++++++++++++++++++++++++++++");
 
@@ -216,11 +227,180 @@ public class ChatBot {
         }
         //Log.d("ChatBot", "gps-------------------------------");
     }
+    //버스 기능
+    static void Bus(Context mContext){
+        GPS = new GpsInfo(mContext);
+        double latitude = GPS.getLatitude();
+        double longitude = GPS.getLongitude();
 
+        System.out.print(latitude +"----" + longitude);
+
+        StrictMode.enableDefaults();
+        int a = 0;
+
+        boolean initem = false, inCity = false, inNodeid = false, inNodenm = false;
+        String city = null, nodeid = null, nodenm = null;
+
+        boolean inArrstation = false, inArrtime = false, inRouteno = false;
+        String arrstation = null, arrtime = null, routeno = null;
+
+        try{
+            URL url = new URL("http://openapi.tago.go.kr/openapi/service/BusSttnInfoInqireService/getCrdntPrxmtSttnList?"
+                    +"serviceKey=h%2Fw4fonXjmMQ0JL6Bn7hhjzK7a8y%2BKLrPco06tq1UfO41%2F7UjcycRKFLWNzkCKpRrv4lN8Xe7oIF3nw5Fpn49A%3D%3D"
+                    +"&gpsLati="+latitude+"&gpsLong="+longitude);
+
+            System.out.println(url);
+            XmlPullParserFactory parserCreator = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = parserCreator.newPullParser();
+
+            parser.setInput(url.openStream(),null);
+
+            int parserEvent = parser.getEventType();
+            System.out.println("파싱시작합니다.");
+
+            while (parserEvent != XmlPullParser.END_DOCUMENT){
+                switch(parserEvent){
+                    case XmlPullParser.START_TAG://parser가 시작 태그를 만나면 실행
+                        if(parser.getName().equals("citycode")){ //citycode 만나면 내용을 받을수 있게 하자
+                            inCity = true;
+                        }
+                        if(parser.getName().equals("nodeid")){ //nodeid 만나면 내용을 받을수 있게 하자
+                            inNodeid = true;
+                        }
+                        if(parser.getName().equals("nodenm")){ //nodenm 만나면 내용을 받을수 있게 하자
+                            inNodenm = true;
+                        }
+                        if(parser.getName().equals("message")){ //message 태그를 만나면 에러 출력
+                            //여기에 에러코드에 따라 다른 메세지를 출력하도록 할 수 있다.
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT://parser가 내용에 접근했을때
+
+                        if(inCity){ //isTitle이 true일 때 태그의 내용을 저장.
+                            city = parser.getText();
+                            inCity = false;
+                        }
+                        if(inNodeid){ //isAddress이 true일 때 태그의 내용을 저장.
+                            nodeid = parser.getText();
+                            inNodeid = false;
+                        }
+                        if(inNodenm){ //isMapx이 true일 때 태그의 내용을 저장.
+                            nodenm = parser.getText();
+                            inNodenm = false;
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if(parser.getName().equals("item")){
+                            if(output == null) {
+                                output = "\n\n 도시코드 : " + city + "\n 정류소ID : " + nodeid + "\n 정류소명 : " + nodenm;
+                            }else{
+                                output = output + "\n\n 도시코드 : " + city + "\n 정류소ID : " + nodeid + "\n 정류소명 : " + nodenm;
+                            }
+                            initem = false;
+                            A[a] = new node(city,nodeid);
+                            a += 1;
+                        }
+                        break;
+                }
+                parserEvent = parser.next();
+            }
+        } catch(Exception e){
+            System.out.println("에러남");
+        }
+        func = 3;
+    }
+
+    static void Bus2(Context mContext,String a){
+
+        StrictMode.enableDefaults();
+
+        int b = Integer.parseInt(a);
+
+        String cityCode = A[b-1].CC;
+        String nodeId = A[b-1].NI;
+
+
+        boolean initem = false, inArrstation = false, inArrtime = false, inRouteno = false;
+        String arrstation = null, arrtime = null, routeno = null;
+
+        try{
+            URL url = new URL("http://openapi.tago.go.kr/openapi/service/ArvlInfoInqireService/getSttnAcctoArvlPrearngeInfoList?serviceKey=h%2Fw4fonXjmMQ0JL6Bn7hhjzK7a8y%2BKLrPco06tq1UfO41%2F7UjcycRKFLWNzkCKpRrv4lN8Xe7oIF3nw5Fpn49A%3D%3D&"+
+                    "cityCode="+cityCode+"&nodeId="+nodeId);
+
+            System.out.println(url);
+            XmlPullParserFactory parserCreator = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = parserCreator.newPullParser();
+
+            parser.setInput(url.openStream(), null);
+
+            int parserEvent = parser.getEventType();
+            System.out.println("두번째 파싱시작합니다.");
+
+            while (parserEvent != XmlPullParser.END_DOCUMENT){
+                switch(parserEvent){
+                    case XmlPullParser.START_TAG://parser가 시작 태그를 만나면 실행
+                        if(parser.getName().equals("arrprevstationcnt")){ //title 만나면 내용을 받을수 있게 하자
+                            inArrstation = true;
+                        }
+                        if(parser.getName().equals("arrtime")){ //address 만나면 내용을 받을수 있게 하자
+                            inArrtime = true;
+                        }
+                        if(parser.getName().equals("routeno")){ //mapx 만나면 내용을 받을수 있게 하자
+                            inRouteno = true;
+                        }
+                        if(parser.getName().equals("message")){ //message 태그를 만나면 에러 출력
+                            System.out.println("에러");
+                            //여기에 에러코드에 따라 다른 메세지를 출력하도록 할 수 있다.
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT://parser가 내용에 접근했을때
+                        if(inArrstation){ //isTitle이 true일 때 태그의 내용을 저장.
+                            arrstation = parser.getText();
+                            inArrstation = false;
+                        }
+                        if(inArrtime){ //isAddress이 true일 때 태그의 내용을 저장.
+                            arrtime = parser.getText();
+                            inArrtime = false;
+                        }
+                        if(inRouteno){ //isMapx이 true일 때 태그의 내용을 저장.
+                            routeno = parser.getText();
+                            inRouteno = false;
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if(parser.getName().equals("item")){
+                            if(output == null) {
+                                output = "\n\n 노선 번호 : " + routeno + "\n 남은 정류장 : "+ arrstation+"("+ Integer.parseInt(arrtime)/60+"분 후)";
+                            }else{
+                                output = output + "\n\n 노선 번호 : " + routeno + "\n 남은 정류장 : "+ arrstation+"("+ Integer.parseInt(arrtime)/60+"분 후)";
+                            }
+                            initem = false;
+                        }
+                        break;
+                }
+                parserEvent = parser.next();
+            }
+        } catch(Exception e){
+            System.out.println("에러가..났습니다...");
+        }
+
+        func = 0;
+
+    }
+    //사용법
     static void menual(){
         output = "'해안아' 키워드를 입력하신 후 원하시는 서비스를 입력해주세요. \n"+ "메뉴추천 \n"+"날씨 \n"+"위치 \n"
                 +"퀴즈 \n"+"교통정보 \n"+"운세 \n"+"예시)해안 메뉴추천 \n";
     }
 
-
+    static class node{
+        String CC;
+        String NI;
+        public node(String a, String b){
+            CC = a;
+            NI = b;
+        }
+    }
 }
